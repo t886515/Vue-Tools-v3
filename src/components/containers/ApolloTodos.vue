@@ -2,7 +2,7 @@
   <div class="apollo-todos">
     <!-- Apollo watched Graphql query -->
     <ApolloQuery
-      :query="require('../../graphql/ToDos.gql')"
+      :query="require('../../graphql/getTodos.gql')"
     >
       <template slot-scope="{ result: { loading, error, data } }">
         <!-- Loading -->

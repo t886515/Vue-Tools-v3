@@ -1,0 +1,10 @@
+mutation($id: String!, $input: TodoInput) {
+  updateTodo(id: $id, input: $input) {
+  id
+  value
+  notes
+  isComplete
+  createDate
+  updateDate
+  }
+}

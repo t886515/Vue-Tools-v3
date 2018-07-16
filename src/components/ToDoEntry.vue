@@ -1,13 +1,19 @@
 <template>
     <q-item class="q-pa-md">
-      <q-item-side icon="check" v-show="todo.isComplete" />
-      <q-item-main v-show="todo.isComplete" :label="todo.value" />
-      <q-item-main v-show="!todo.isComplete">
-        <q-checkbox v-model="selectedItem" @click.native="onCheckBoxClickTest" :val="todo.id" :label="todo.value"/>
-        <NotesModal v-show="displayNoteModal" :toggleNoteModal="toggleNoteModal" :displayNoteModal="displayNoteModal" :todo="todo" />
+
+      <q-item-side icon="check" v-if="todo.isComplete" />
+      <q-item-main v-if="todo.isComplete" :label="todo.value" />
+
+      <q-item-main v-if="!todo.isComplete">
+        <!-- <q-checkbox v-model="selectedItems" @click.native="onCheckBoxClickTest" :val="todo.id" :label="todo.value"/> -->
+        <q-checkbox v-model="selectedTodo" :val="todo.id" :label="todo.value"/>
+
+        <NotesModal :displayNoteModal="displayNoteModal" :todo="todo" />
+
         <div class="notes">
           {{todo.notes}}
         </div>
+
       </q-item-main>
       <q-item-side>
         <q-btn round icon="list" @click="toggleTodoMenu">
@@ -47,6 +53,7 @@ export default {
       displayTodoMenu: false,
       displayNoteModal: false,
       notes: this.todo.notes,
+      selectedTodo: false,
     };
   },
   props: {
@@ -56,19 +63,23 @@ export default {
         return { value: 'default', id: 0, isComplete: false };
       },
     },
-    selectedItem: {
-      type: Array,
+    // selectedItem: {
+    //   type: Array,
+    // },
+    updateSelectedTodos: {
+      type: Function,
     },
     removeTodo: {
       type: Function,
     },
   },
   methods: {
-    onCheckBoxClickTest() {
-      // console.log(this.selectedItem)
-      // console.log(this.selectedItem[0])
-      // console.log(this.todo.id)
-    },
+    // onCheckBoxClickTest() {
+    //   updateSelectedTodos();
+    //   // console.log(this.selectedItem)
+    //   // console.log(this.selectedItem[0])
+    //   // console.log(this.todo.id)
+    // },
     toggleTodoMenu() {
       this.displayTodoMenu = !this.displayTodoMenu;
     },
@@ -79,7 +90,17 @@ export default {
       this.removeTodo(el, x);
     },
     toggleNoteModal(el) {
+      this.toggleTodoMenu();
       this.displayNoteModal = !this.displayNoteModal;
+    },
+  },
+  watch: {
+    selectedTodo(newSelectedTodo) {
+      // console.log(newSelectedTodo);
+      // console.log(this.selectedTodo);
+      const { id } = this.todo;
+      console.log(id);
+      this.updateSelectedTodos(id);
     },
   },
 };

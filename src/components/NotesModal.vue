@@ -1,14 +1,25 @@
 <template>
-  <q-modal @keyup.esc.native="cancel" :content-css="css" class="noteModal">
-    <h4>Notes for "{{todo.value}}"</h4>
-    <q-item-separator />
-      <q-input type="textarea" v-model="notes" :placeholder="notes" @keyup.enter="saveNotes" />
-    <q-btn round icon="save" @click="saveNotes"><q-tooltip anchor="bottom middle" self="top middle">Add Notes</q-tooltip></q-btn>
-    <q-btn round icon="cancel" @click="cancel"><q-tooltip anchor="bottom middle" self="top middle">Cancel</q-tooltip></q-btn>
+  <q-modal v-model="noteModalState" @keyup.esc.native="cancel" :content-css="css" >
+    <ApolloMutation
+    :mutation="require('@/graphql/updateTodo.gql')"
+    :variables="newTodo"
+    :update="updateTodoNotes"
+    @done="doneUpdateTodoNotes"
+    >
+      <template slot-scope="{ mutate, loading, error }">
+        <h4>Notes for "{{todo.value}}"</h4>
+        <q-item-separator />
+          <q-input type="textarea" v-model="notes" :placeholder="notes" @keyup.enter="mutate" />
+        <q-btn round icon="save" @click="mutate"><q-tooltip anchor="bottom middle" self="top middle">Add Notes</q-tooltip></q-btn>
+        <q-btn round icon="cancel" @click="cancel"><q-tooltip anchor="bottom middle" self="top middle">Cancel</q-tooltip></q-btn>
+      </template>
+    </ApolloMutation>
   </q-modal>
 </template>
 
 <script>
+import getTodos from '@/graphql/getTodos.gql';
+
 export default {
   name: 'list-entry',
   data() {
@@ -18,6 +29,7 @@ export default {
         padding: '30px',
         'text-align': 'center',
       },
+      noteModalState: false,
     };
   },
   props: {
@@ -27,24 +39,55 @@ export default {
     todo: {
       type: Object,
     },
-    toggleNoteModal: {
-      type: Function,
-    },
   },
   methods: {
-    saveNotes() {
-      addNote(this.todo.id, this.notes);
-      this.toggleNoteModal();
+    toggleNoteModal() {
+      this.noteModalState = !this.noteModalState;
     },
     cancel() {
-      alert('You are going to exit without saving!');
-      this.notes = '';
+      const alertObj = {
+        title: 'Warning',
+        message: 'You are quitting without saving your notes!',
+        ok: true,
+        cancel: true,
+      };
+      this.$q.dialog(alertObj).then(() => {
+        this.toggleNoteModal();
+      });
+    },
+    updateTodoNotes(
+      proxy,
+      {
+        data: { updateTodo },
+      },
+    ) {
+      console.log(updateTodo);
+      // const getTodoData = proxy.readQuery({ query: getTodos });
+      // const { Todos } = getTodoData;
+      // console.log(Todos);
+      // // Todos.push(updateTodo);
+      // proxy.writeQuery({ query: getTodos, data: getTodoData });
+    },
+    doneUpdateTodoNotes() {
       this.toggleNoteModal();
+    },
+  },
+  computed: {
+    newTodo() {
+      return {
+        id: this.todo.id,
+        input: {
+          notes: this.notes,
+          value: this.todo.value,
+          isComplete: this.todo.isComplete,
+        },
+      };
+    },
+  },
+  watch: {
+    displayNoteModal() {
+      this.noteModalState = !this.noteModalState;
     },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

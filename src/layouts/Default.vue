@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-layout-header>
-      <Header />
+      <AppHeader />
     </q-layout-header>
 
     <!-- <q-layout-drawer
@@ -54,12 +54,12 @@
 
 <script>
 // import { openURL } from 'quasar';
-import Header from '../components/Header';
+import AppHeader from '../components/AppHeader';
 
 export default {
   name: 'LayoutDefault',
   components: {
-    Header,
+    AppHeader,
   },
   // data() {
   //   return {
@@ -71,6 +71,3 @@ export default {
   // },
 };
 </script>
-
-<style>
-</style>

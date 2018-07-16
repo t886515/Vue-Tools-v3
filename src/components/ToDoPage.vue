@@ -1,18 +1,26 @@
 <template>
   <div class="flex flex-center">
     <q-card class="col-5 q-ma-lg">
-      <q-card-title>
-          <q-input v-model="addTodoValue" @keyup.enter="addTodo" type="textarea" float-label="Enter A Todo"><q-btn round class="add-button" icon="add" @click="addTodo"><q-tooltip >Add To-Do</q-tooltip></q-btn></q-input>
-      </q-card-title>
+      <CreateTodoForm />
+
       <q-list separator>
 
-        <ListEntry v-for="todo in Todos" :todo="todo" :selectedItem="selectedItem" :removeTodo="removeTodo" :key="todo.id"/>
+        <ListEntry v-for="todo in Todos" :todo="todo" :updateSelectedTodos="updateSelectedTodos" :removeTodo="removeTodo" :key="todo.id"/>
       </q-list>
+      <!-- <ApolloMutation
+        :mutation="createTodoQuery"
+        :variables="newTodo"
+        :update="updateTodoArray"
+        @done="onDone"
+        >
+        <template slot-scope="{ mutate, loading, error }"> -->
       <q-card-actions align="center">
-        <q-btn color="dark" round icon="check" @click="completeTodo"><q-tooltip>Mark As Complete</q-tooltip></q-btn>
-        <q-btn color="dark" round icon="delete" @click="removeTodo"><q-tooltip>Remove Selected</q-tooltip></q-btn>
+        <q-btn color="dark" round icon="check" @click="completeTodo(mutate)"><q-tooltip>Mark As Complete</q-tooltip></q-btn>
+        <q-btn color="dark" round icon="delete" @click="removeTodo(mutate)"><q-tooltip>Remove Selected</q-tooltip></q-btn>
         <q-btn color="dark" round icon="delete sweep" @click="removeAllTodo"><q-tooltip>REMOVE ALL</q-tooltip></q-btn>
       </q-card-actions>
+        <!-- </template>
+      </ApolloMutation> -->
     </q-card>
 
     <q-card class="col-5 q-ma-lg text-center">
@@ -30,50 +38,45 @@
 <script>
 import ListEntry from './ToDoEntry';
 import PieChart from './PieChart';
+import CreateTodoForm from './CreateTodoForm';
+import updateTodoQuery from '@/graphql/updateTodo.gql';
+import removeTodoQuery from '@/graphql/removeTodo.gql';
 
 export default {
   name: 'list',
-  components: { ListEntry, PieChart },
+  components: { ListEntry, PieChart, CreateTodoForm },
   data() {
     return {
-      items: [
-        {
-          value: 'Make a to do list',
-          id: 1,
-          isComplete: false,
-          notes:
-            'Something that looks right Something that looks right Something that looks right Something that looks right',
-        },
-        { value: 'Do leetcode', id: 2, isComplete: false },
-        { value: 'Sleep', id: 3, isComplete: false },
-      ],
-      selectedItem: [],
-      addTodoValue: '',
+      items: [],
+      updateTodoQuery,
+      removeTodoQuery,
+      selectedTodos: [],
     };
   },
   props: ['Todos'],
   methods: {
-    addTodo(event) {
-      if (this.addTodoValue.trim() === '') {
-        alert('Please Enter Some Values');
-        return;
-      }
-      dbAddToDo(this.addTodoValue, false, '');
-      this.addTodoValue = '';
+    updateSelectedTodos(selectedTodo) {
+      console.log(selectedTodo);
+      const index = this.selectedTodos.indexOf(selectedTodo);
+      !this.selectedTodos.includes(selectedTodo)
+        ? this.selectedTodos.push(selectedTodo)
+        : this.selectedTodos.splice(index, 1);
+      // this.selectedTodos = selectedTodos;
+      console.log(this.selectedTodos);
     },
-    completeTodo(event) {
-      this.items.forEach((x, i) => {
-        if (this.selectedItem.includes(x.id)) {
-          this.items[i].isComplete = true;
-        }
-      });
-      this.selectedItem = [];
+    completeTodo(mutate) {
+      // this.items.forEach((x, i) => {
+      //   if (this.selectedItem.includes(x.id)) {
+      //     this.items[i].isComplete = true;
+      //   }
+      // });
+      // this.selectedItem = [];
     },
-    removeTodo(event, x) {
-      for (const item of this.selectedItem) {
-        dbRemoveToDo(item);
-      }
-      this.selectedItem = [];
+    removeTodo(mutate) {
+      // for (const item of this.selectedItem) {
+      //   dbRemoveToDo(item);
+      // }
+      // this.selectedItem = [];
     },
     removeAllTodo() {
       // prompt('Hi?')
@@ -81,6 +84,7 @@ export default {
       dbRemoveAllTodo();
     },
   },
+  computed: {},
 };
 </script>
 
