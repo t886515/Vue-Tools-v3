@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import ToDoPage from '../ToDoPage';
-import { Loading } from 'quasar';
+import ToDoPage from '@/components/ToDoPage.vue';
 
 export default {
   name: 'apollo-todos',
@@ -43,13 +42,13 @@ export default {
   },
   methods: {
     apolloLoadingSpinner() {
-      Loading.show({
+      this.$q.loading.show({
         message: 'Waiting for response from server..',
         delay: 0,
       });
     },
     stopLoading() {
-      Loading.hide();
+      this.$q.loading.hide();
     },
   },
 };
