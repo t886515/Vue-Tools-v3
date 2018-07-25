@@ -32,7 +32,10 @@
           @click="removeTodo">
           <q-tooltip>Remove Selected</q-tooltip>
         </q-btn>
-        <!-- <q-btn color="dark" round icon="delete sweep" @click="removeAllTodo"><q-tooltip>REMOVE ALL</q-tooltip></q-btn> -->
+        <!-- <q-btn color="dark" round icon="delete sweep"
+        @click="removeAllTodo">
+        <q-tooltip>REMOVE ALL
+      </q-tooltip></q-btn> -->
       </q-card-actions>
     </q-card>
 
@@ -58,18 +61,21 @@
 </template>
 
 <script>
-import ListEntry from './ToDoEntry';
-import PieChart from './PieChart';
-import LineChart from './LineChart';
-import CreateTodoForm from './CreateTodoForm';
 import updateTodoQuery from '@/graphql/updateTodo.gql';
 import removeTodoQuery from '@/graphql/removeTodo.gql';
 import getTodosQuery from '@/graphql/getTodos.gql';
+import ListEntry from './ToDoEntry.vue';
+import PieChart from './PieChart.vue';
+import LineChart from './LineChart.vue';
+import CreateTodoForm from './CreateTodoForm.vue';
 
 export default {
   name: 'list',
   components: {
-    ListEntry, PieChart, CreateTodoForm, LineChart,
+    ListEntry,
+    PieChart,
+    CreateTodoForm,
+    LineChart,
   },
   data() {
     return {
@@ -125,10 +131,13 @@ export default {
             //   },
             // },
           })
-          .then((data) => {})
+          .then((data) => {
+            data;
+          })
           .catch((error) => {
             // Error
-            console.error(error);
+            error;
+            // console.error(error);
             // We restore the initial user input
             // this.newTag = newTag;
           });
