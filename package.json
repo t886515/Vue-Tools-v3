@@ -44,7 +44,9 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "gitHooks": {},
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
   "lint-staged": {
     "*.js": [
       "vue-cli-service lint",
