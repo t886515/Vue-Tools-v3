@@ -11,8 +11,10 @@ import { colors } from 'quasar';
 
 export default {
   name: 'pie-chart',
+  props: ['Todos'],
   mounted() {
     this.$nextTick(function () {
+      console.log(this.Todos);
       this.testData = [
         {
           label: 'Complete',

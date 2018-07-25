@@ -1,0 +1,9 @@
+fragment TodoInfo on Todo {
+  id
+  value
+  notes
+  isComplete
+  inProgress
+  createDate
+  updateDate
+}

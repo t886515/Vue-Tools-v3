@@ -1,10 +1,7 @@
+#import "./todoFragment.gql"
+
 mutation($input: TodoInput) {
   createTodo(input: $input) {
-    id
-    value
-    notes
-    isComplete
-    createDate
-    updateDate
+    ...TodoInfo
   }
 }

@@ -1,9 +1,7 @@
+#import "./todoFragment.gql"
+
 query {
   Todos {
-    id
-    value
-    notes
-    isComplete
-    createDate
+    ...TodoInfo
   }
 }

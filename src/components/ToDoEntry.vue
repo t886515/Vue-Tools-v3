@@ -5,14 +5,15 @@
       <q-item-main v-if="todo.isComplete" :label="todo.value" />
 
       <q-item-main v-if="!todo.isComplete">
-        <!-- <q-checkbox v-model="selectedItems" @click.native="onCheckBoxClickTest" :val="todo.id" :label="todo.value"/> -->
         <q-checkbox v-model="selectedTodo" :val="todo.id" :label="todo.value"/>
 
         <NotesModal :displayNoteModal="displayNoteModal" :todo="todo" />
 
-        <div class="notes">
+        <q-item>
+          <q-item-tile>
           {{todo.notes}}
-        </div>
+          </q-item-tile>
+        </q-item>
 
       </q-item-main>
       <q-item-side>
@@ -22,16 +23,21 @@
               <q-item v-show="!todo.isComplete">
                 <q-btn @click="toggleNoteModal">{{todo.notes === "" || todo.notes === undefined ? "Add Notes" : "Edit Notes"}}</q-btn>
               </q-item>
+
               <q-item v-show="!todo.isComplete">
-                <q-btn @click="selectTodoAction">Mark As Complete</q-btn>
+                <q-btn @click="markTodoStatus(true)">Mark As Complete</q-btn>
               </q-item>
+
               <q-item v-show="todo.isComplete">
-                <q-btn @click="selectTodoAction">Mark As Incomplete</q-btn>
+                <q-btn @click="markTodoStatus(false)">Mark As Incomplete</q-btn>
               </q-item>
+
               <q-item-separator/>
+
               <q-item>
                 <q-btn @click="deleteTodo">Delete</q-btn>
               </q-item>
+
             </q-list>
           </q-popover>
         </q-btn>
@@ -42,6 +48,9 @@
 
 <script>
 import NotesModal from './NotesModal';
+import updateTodoQuery from '@/graphql/updateTodo.gql';
+import removeTodoQuery from '@/graphql/removeTodo.gql';
+import getTodosQuery from '@/graphql/getTodos.gql';
 
 export default {
   name: 'list-entry',
@@ -63,53 +72,63 @@ export default {
         return { value: 'default', id: 0, isComplete: false };
       },
     },
-    // selectedItem: {
-    //   type: Array,
-    // },
     updateSelectedTodos: {
       type: Function,
     },
-    removeTodo: {
+    toggleOffCheckboxes: {
+      type: Boolean,
+    },
+    unSetSelectedTodos: {
       type: Function,
     },
   },
   methods: {
-    // onCheckBoxClickTest() {
-    //   updateSelectedTodos();
-    //   // console.log(this.selectedItem)
-    //   // console.log(this.selectedItem[0])
-    //   // console.log(this.todo.id)
-    // },
     toggleTodoMenu() {
       this.displayTodoMenu = !this.displayTodoMenu;
     },
-    selectTodoAction() {
-      this.todo.isComplete = !this.todo.isComplete;
+    markTodoStatus(isComplete) {
+      const { id } = this.todo;
+      const input = {
+        isComplete,
+      };
+      this.$apollo.mutate({
+        mutation: updateTodoQuery,
+        variables: { id, input },
+        update: (store, { data }) => {
+          this.selectedTodo = false;
+          this.unSetSelectedTodos();
+        },
+      });
     },
-    deleteTodo(el, x) {
-      this.removeTodo(el, x);
+    deleteTodo() {
+      const { id } = this.todo;
+      this.$apollo.mutate({
+        mutation: removeTodoQuery,
+        variables: { id },
+        update: (store, { data }) => {
+          const getTodoData = store.readQuery({ query: getTodosQuery });
+          getTodoData.Todos = getTodoData.Todos.filter((todo) => {
+            const _id = todo.id;
+            return id !== _id;
+          });
+          store.writeQuery({ query: getTodosQuery, data: getTodoData });
+          this.selectedTodo = false;
+        },
+      });
     },
-    toggleNoteModal(el) {
+    toggleNoteModal() {
       this.toggleTodoMenu();
       this.displayNoteModal = !this.displayNoteModal;
     },
   },
   watch: {
     selectedTodo(newSelectedTodo) {
-      // console.log(newSelectedTodo);
-      // console.log(this.selectedTodo);
       const { id } = this.todo;
-      console.log(id);
       this.updateSelectedTodos(id);
+    },
+    toggleOffCheckboxes() {
+      this.selectedTodo = false;
     },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.notes {
-  color: gray;
-  padding: 15px;
-}
-</style>

@@ -46,7 +46,7 @@ export default {
       });
     },
     updateTodoArray(
-      proxy,
+      store,
       {
         data: { createTodo },
       },
@@ -61,13 +61,15 @@ export default {
       // The second parameter is for the result retrieved from mutation query.
 
       // reading Query using getTodos query
-      const getTodoData = proxy.readQuery({ query: getTodosQuery });
+      const getTodoData = store.readQuery({ query: getTodosQuery });
       // retrieve the array of Todos from store
       const { Todos } = getTodoData;
       // add the retrieved data to the data retrieved from reading store
       Todos.push(createTodo);
       // write the updated data to the store
-      proxy.writeQuery({ query: getTodosQuery, data: getTodoData });
+      store.writeQuery({ query: getTodosQuery, data: getTodoData });
+
+      this.todoValue = '';
     },
   },
   computed: {
