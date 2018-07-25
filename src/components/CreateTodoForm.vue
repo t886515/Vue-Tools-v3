@@ -5,25 +5,25 @@
     :update="updateTodoArray"
     @done="onDone"
     >
-
     <template slot-scope="{ mutate, loading, error }">
       <q-modal v-if="error">
         An error occured: {{ error }}
         <q-btn label="Ok."/>
       </q-modal>
 
-        <q-card-title>
-          <q-input v-model="todoValue" @keyup.enter="mutate()" float-label="Enter A Todo">
-            <q-btn round color="dark" icon="add" @click="mutate()">
-              <q-tooltip >Add To-Do</q-tooltip>
-            </q-btn>
-          </q-input>
-        </q-card-title>
-      </template>
-    </ApolloMutation>
+      <q-card-title>
+        <q-input v-model="todoValue" @keyup.enter="mutate()" float-label="Enter A Todo">
+          <q-btn round color="dark" icon="add" @click="mutate()">
+            <q-tooltip >Add To-Do</q-tooltip>
+          </q-btn>
+        </q-input>
+      </q-card-title>
+    </template>
+  </ApolloMutation>
 </template>
 
 <script>
+/* eslint-disable import/no-extraneous-dependencies */
 import getTodosQuery from '@/graphql/getTodos.gql';
 import createTodoQuery from '@/graphql/createTodo.gql';
 import { Notify } from 'quasar';
