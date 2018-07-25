@@ -1,6 +1,8 @@
 <template>
   <q-page class="flex flex-center">
+
     <img src="../assets/namelogo.png" height="50"/>
+
     <q-item>
       <transition
           appear
@@ -10,9 +12,11 @@
           <div v-if="show" v-html="test" />
         </transition>
     </q-item>
+
     <q-item>
       <q-btn label="to-do list" to="todos" />
     </q-item>
+
   </q-page>
 </template>
 
