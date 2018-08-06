@@ -14,7 +14,7 @@ export default {
   props: ['Todos'],
   mounted() {
     this.$nextTick(function () {
-      console.log(this.Todos);
+      // console.log(this.Todos);
       this.testData = [
         {
           label: 'Complete',

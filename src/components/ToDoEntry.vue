@@ -2,10 +2,14 @@
     <q-item class="q-pa-md">
 
       <q-item-side icon="check" v-if="todo.isComplete" />
+
       <q-item-main v-if="todo.isComplete" :label="todo.value" />
 
+
       <q-item-main v-if="!todo.isComplete">
-        <q-checkbox v-model="selectedTodo" :val="todo.id" :label="todo.value"/>
+        <!-- <q-checkbox v-model="selectedTodo" :val="todo.id"/> -->
+        <input type="checkbox" />
+        {{todo.value}}
 
         <NotesModal :displayNoteModal="displayNoteModal" :todo="todo" />
 

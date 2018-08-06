@@ -1,4 +1,4 @@
-/* eslint disable */
+/* eslint-disable */
 
 import Vue from 'vue';
 import VueApollo from 'vue-apollo';
@@ -48,19 +48,19 @@ const defaultOptions = {
 // Call this in the Vue app file
 export function createProvider(options = {}) {
   // Create apollo client
-  // const { apolloClient, wsClient } = createApolloClient({
-  const { apolloClient } = createApolloClient({
+  const { apolloClient, wsClient } = createApolloClient({
+    // const { apolloClient } = createApolloClient({
     ...defaultOptions,
     ...options,
   });
-  // apolloClient.wsClient = wsClient;
+  apolloClient.wsClient = wsClient;
 
   // Create vue apollo provider
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
     defaultOptions: {
       $query: {
-        // fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'cache-and-network',
       },
     },
     errorHandler(error) {
