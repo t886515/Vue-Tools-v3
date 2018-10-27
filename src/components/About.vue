@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    I'm just an about page.
+    This will become bio.
   </q-page>
 </template>
 

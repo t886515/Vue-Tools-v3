@@ -1,0 +1,7 @@
+#import "./todoFragment.gql"
+
+mutation($id: String!, $input: completeTodoInput) {
+  completeTodo(id: $id, input: $input) {
+    ...TodoInfo
+  }
+}

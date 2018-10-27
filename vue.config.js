@@ -1,5 +1,5 @@
 module.exports = {
-  lintOnSave: false,
+  lintOnSave: true,
   pluginOptions: {
     quasar: {
       theme: 'mat',

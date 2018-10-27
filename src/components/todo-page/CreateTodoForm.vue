@@ -36,7 +36,6 @@ export default {
       createTodoQuery,
     };
   },
-  props: ['belongDateIndex'],
   methods: {
     onDone({ data: { createTodo } }) {
       const { value } = createTodo;
@@ -76,7 +75,6 @@ export default {
   computed: {
     // This function create a valid todo object based on todo input value.
     newTodo() {
-      console.log(this.belongDateIndex);
       return {
         input: {
           isComplete: false,

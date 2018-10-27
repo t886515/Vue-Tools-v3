@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import ToDoPage from '@/components/ToDoPage.vue';
+import ToDoPage from '@/components/todo-page/ToDoPage.vue';
 
 export default {
   name: 'apollo-todos',

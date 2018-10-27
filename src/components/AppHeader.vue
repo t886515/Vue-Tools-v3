@@ -8,7 +8,7 @@
       <img src="../assets/cute-cat-logo.png" height="40" class="q-ma-sm"/>
     <!-- </q-item> -->
     <q-toolbar-title >
-       ♡ Some Vue Tools ♡
+       ♡ Nana's Todos and Documentations ♡
       <div slot="subtitle">A tools and built from Vue, Apollo and Quasar.</div>
     </q-toolbar-title>
     <q-tabs color="dark">

@@ -5,9 +5,7 @@ fragment TodoInfo on Todo {
   isComplete
   inProgress
   createDate
-  _createDate
-  updateDate
-  _updateDate
-  belongDate
-  belongDateIndex
+  lastUpdateDate
+  completeDate
+  stashedDate
 }
