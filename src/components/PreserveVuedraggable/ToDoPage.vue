@@ -15,13 +15,11 @@
             v-for="(dateObject, index) in sortedTodos"
             :key="index"
             :subtitle="dateObject.date"
-
             side="right"
           >
 
         <!-- <div v-for="(dateObject, index) in sortedTodos" :key="index" > -->
           <!-- {{dateObject.date}} -->
-          placeholder
           <draggable
             v-if="true"
             v-model="dateObject.todos"
@@ -29,10 +27,10 @@
             :options="options"
             @change="onBelongDateChange"
             >
-            <!-- <div v-for="todo in dateObject.todos">
+            <div v-for="todo in dateObject.todos">
               {{todo.value}}
-            </div> -->
-            
+            </div>
+
             <!-- <ListEntry
               v-for="todo in dateObject.todos"
               :date="dateObject.date"
@@ -214,7 +212,7 @@ export default {
         acc[justDate].push(todo);
         return acc;
       }, {});
-      const reformatted = Object.keys(dateObjects).map(date => {
+      const reformatted = Object.keys(dateObjects).map((date) => {
         const todos = dateObjects[date];
         const today = new Date();
         const todayString = today.toDateString();
@@ -227,6 +225,7 @@ export default {
           todos,
         };
       });
+      console.log(reformatted);
       firstItemToday && (this.belongDateIndex = 0);
       this.sortedTodos = reformatted;
     },
@@ -276,10 +275,10 @@ export default {
             //   },
             // },
           })
-          .then(data => {
+          .then((data) => {
             data;
           })
-          .catch(error => {
+          .catch((error) => {
             // Error
             error;
             // console.error(error);
@@ -299,7 +298,7 @@ export default {
             // this is assume mutation calls are fired synchronously...
             if (index === this.selectedTodos.length - 1) {
               const getTodoData = store.readQuery({ query: getTodosQuery });
-              getTodoData.Todos = getTodoData.Todos.filter(todo => {
+              getTodoData.Todos = getTodoData.Todos.filter((todo) => {
                 const _id = todo.id;
                 return !this.selectedTodos.includes(_id);
               });
@@ -345,6 +344,7 @@ export default {
 <style>
 .drag-area {
   min-height: 50px;
+  min-width: 50px;
 }
 /* .to-do-card {
   width: 50%;
