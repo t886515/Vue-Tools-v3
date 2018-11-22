@@ -1,23 +1,35 @@
 <template>
   <div class="flex flex-center">
-    <q-card class="col-6 q-ma-lg">
+    <q-card class="col-8 q-ma-lg round-edge" color="primary">
 
       <CreateTodoForm/>
 
-      <q-card-main separator>
-        <ListEntry
-          v-for="todo in Todos"
-          :key="todo.id"
-          :date="todo.createDate"
-          :todo="todo"
-          :unSetSelectedTodos="unSetSelectedTodos"
-          :toggleOffCheckboxes="toggleOffCheckboxes"
-          :updateSelectedTodos="updateSelectedTodos"
-        />
-      </q-card-main>
+      <q-card-separator />
+      <div
+        v-for="dateObject in sortTodoByDate"
+        :key="dateObject.createDate"
+        class="q-ma-lg bg-tertiary"
+      >
+        <q-item>{{dateObject.createDate}}</q-item>
+        <q-card
+          color="secondary"
+        >
+          <ListEntry
+            v-for="todo in dateObject.todos"
+            :key="todo.id"
+            :date="todo.createDate"
+            :todo="todo"
+            :unSetSelectedTodos="unSetSelectedTodos"
+            :toggleOffCheckboxes="toggleOffCheckboxes"
+            :updateSelectedTodos="updateSelectedTodos"
+          />
+        </q-card>
+      </div>
 
 
-      <q-card-actions align="center">
+      <q-card-separator />
+
+      <q-card-actions align="center" class="bg-secondary">
         <q-btn
           color="dark"
           round
@@ -40,7 +52,8 @@
 </template>
 
 <script>
-import updateTodoQuery from '@/graphql/updateTodo.gql';
+import { date } from 'quasar';
+import completeTodoQuery from '@/graphql/completeTodo.gql';
 import removeTodoQuery from '@/graphql/removeTodo.gql';
 import getTodosQuery from '@/graphql/getTodos.gql';
 import ListEntry from './ToDoEntry.vue';
@@ -59,10 +72,8 @@ export default {
     };
   },
   props: ['Todos'],
-  mounted() {
-  },
-  watch: {
-  },
+  mounted() {},
+  watch: {},
   methods: {
     unSetSelectedTodos() {
       this.selectedTodos = [];
@@ -79,12 +90,16 @@ export default {
         this.$apollo
           .mutate({
             // Query
-            mutation: updateTodoQuery,
+            mutation: completeTodoQuery,
             // Parameters
             variables: { id, input },
             // Update the cache with the result
             // The query will be updated with the optimistic response
             // and then with the real result of the mutation
+
+            // FIXME keeping data deconstruction as a reminder - the second param of mutation's update
+            // is queryResult from the mutation query. data allows you access result.
+            // eslint-disable-next-line
             update: (store, { data }) => {
               if (index === this.selectedTodos.length - 1) {
                 this.unSetSelectedTodos();
@@ -110,11 +125,14 @@ export default {
             //   },
             // },
           })
-          .then(data => {
+          .then((data) => {
+            // TODO could do certain option once the mutation is finished
+            // eslint-disable-next-line
             data;
           })
-          .catch(error => {
-            // Error
+          .catch((error) => {
+            // TODO could do certain option once the mutation failed
+            // eslint-disable-next-line
             error;
             // console.error(error);
             // We restore the initial user input
@@ -128,14 +146,14 @@ export default {
         this.$apollo.mutate({
           mutation: removeTodoQuery,
           variables: { id },
-          update: (store, { data }) => {
+          update: (store) => {
             // if the last item in the selected todos is updated succesfully
             // this is assume mutation calls are fired synchronously...
             if (index === this.selectedTodos.length - 1) {
               const getTodoData = store.readQuery({ query: getTodosQuery });
-              getTodoData.Todos = getTodoData.Todos.filter(todo => {
-                const _id = todo.id;
-                return !this.selectedTodos.includes(_id);
+              getTodoData.Todos = getTodoData.Todos.filter((todo) => {
+                const allTodosId = todo.id;
+                return !this.selectedTodos.includes(allTodosId);
               });
               store.writeQuery({ query: getTodosQuery, data: getTodoData });
               this.unSetSelectedTodos();
@@ -148,6 +166,43 @@ export default {
     },
   },
   computed: {
+    // This function takes a list of todos, sort into objects that has a property of createDate and an array of todos
+    // created under that createdDate.
+    sortTodoByDate() {
+      const sortIntoObjectsByDate = [];
+      const hashDatePosition = [];
+      this.Todos.forEach((todo) => {
+        const { createDate } = todo;
+        const formattedCreateDate = date.formatDate(createDate, 'MMM Do, YYYY');
+        let indexInFinalArray;
+        if (hashDatePosition.includes(formattedCreateDate)) {
+          indexInFinalArray = hashDatePosition.indexOf(formattedCreateDate);
+          sortIntoObjectsByDate[indexInFinalArray] &&
+            sortIntoObjectsByDate[indexInFinalArray].todos &&
+            sortIntoObjectsByDate[indexInFinalArray].todos.push(todo);
+        } else {
+          hashDatePosition.push(formattedCreateDate);
+          indexInFinalArray = hashDatePosition.length - 1;
+          sortIntoObjectsByDate[indexInFinalArray] = {
+            createDate: formattedCreateDate,
+            todos: [todo],
+          };
+        }
+      });
+      console.log(sortIntoObjectsByDate);
+      return sortIntoObjectsByDate;
+
+      // const sortedTodosObject = this.Todos.reduce((acc, todo) => {
+      //   const { createDate } = todo;
+      //   const formattedCreateDate = date.formatDate(createDate, 'MMM Do, YYYY');
+      //   acc[formattedCreateDate]
+      //     ? acc[formattedCreateDate].push(todo)
+      //     : (acc[formattedCreateDate] = [todo]);
+      //   return acc;
+      // }, {});
+      // console.log(sortedTodosObject);
+      // return sortedTodosObject;
+    },
   },
 };
 </script>
@@ -163,4 +218,8 @@ export default {
   width: 45px;
   height: 45px;
 } */
+
+.round-edge {
+  border-radius: 15px;
+}
 </style>

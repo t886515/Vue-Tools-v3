@@ -1,27 +1,33 @@
 <template>
     <q-item class="q-pa-md">
 
-      <q-item-side icon="check" v-if="todo.isComplete" />
+     <q-item-main>
+        <q-item >
+          <q-item-side v-if="!todo.isComplete">
+            <q-checkbox v-model="selectedTodo" :val="todo.id"/>
+          </q-item-side>
+          <q-item-side v-if="todo.isComplete" icon="check" color="positive" />
 
-      <q-item-main v-if="todo.isComplete" :label="todo.value" />
+          <q-item-main>
+            <q-item-tile color="primary">
+              {{todo.value}}
+              <!-- <q-popup-edit v-model="textHolder" title="Update calories" buttons>
+                <q-input type="number" v-model="textHolder" />
+              </q-popup-edit> -->
+            </q-item-tile>
+          </q-item-main>
+        </q-item>
 
-
-      <q-item-main v-if="!todo.isComplete">
-        <!-- <q-checkbox v-model="selectedTodo" :val="todo.id"/> -->
-        <input type="checkbox" />
-        {{todo.value}}
-
-        <NotesModal :displayNoteModal="displayNoteModal" :todo="todo" />
-
-        <q-item>
-          <q-item-tile>
-          {{todo.notes}}
+        <q-item v-if="todo.notes">
+          <q-item-tile color="dark">
+            {{todo.notes}}
           </q-item-tile>
         </q-item>
 
-      </q-item-main>
-      <q-item-side>
-        <q-btn round icon="list" @click="toggleTodoMenu">
+     </q-item-main>
+
+      <q-item-side right>
+        <q-btn color="dark" round icon="list" @click="toggleTodoMenu">
           <q-popover anchor="bottom left" v-model="displayTodoMenu">
             <q-list @click="toggleTodoMenu">
               <q-item v-show="!todo.isComplete">
@@ -46,15 +52,19 @@
           </q-popover>
         </q-btn>
       </q-item-side>
+
+      <NotesModal :displayNoteModal="displayNoteModal" :todo="todo" />
+
+
     </q-item>
 
 </template>
 
 <script>
-import NotesModal from './NotesModal';
-import updateTodoQuery from '@/graphql/updateTodo.gql';
+import completeTodoQuery from '@/graphql/completeTodo.gql';
 import removeTodoQuery from '@/graphql/removeTodo.gql';
 import getTodosQuery from '@/graphql/getTodos.gql';
+import NotesModal from './NotesModal.vue';
 
 export default {
   name: 'list-entry',
@@ -67,6 +77,7 @@ export default {
       displayNoteModal: false,
       notes: this.todo.notes,
       selectedTodo: false,
+      textHolder: '',
     };
   },
   props: {
@@ -96,9 +107,9 @@ export default {
         isComplete,
       };
       this.$apollo.mutate({
-        mutation: updateTodoQuery,
+        mutation: completeTodoQuery,
         variables: { id, input },
-        update: (store, { data }) => {
+        update: () => {
           this.selectedTodo = false;
           this.unSetSelectedTodos();
         },
@@ -109,11 +120,11 @@ export default {
       this.$apollo.mutate({
         mutation: removeTodoQuery,
         variables: { id },
-        update: (store, { data }) => {
+        update: (store) => {
           const getTodoData = store.readQuery({ query: getTodosQuery });
           getTodoData.Todos = getTodoData.Todos.filter((todo) => {
-            const _id = todo.id;
-            return id !== _id;
+            const allTodosId = todo.id;
+            return id !== allTodosId;
           });
           store.writeQuery({ query: getTodosQuery, data: getTodoData });
           this.selectedTodo = false;
@@ -126,7 +137,7 @@ export default {
     },
   },
   watch: {
-    selectedTodo(newSelectedTodo) {
+    selectedTodo() {
       const { id } = this.todo;
       this.updateSelectedTodos(id);
     },

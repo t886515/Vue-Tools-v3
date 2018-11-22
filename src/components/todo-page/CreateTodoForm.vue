@@ -11,11 +11,11 @@
         <q-btn label="Ok."/>
       </q-modal>
 
-      <q-card-title>
-        <q-input v-model="todoValue" @keyup.enter="mutate()" float-label="Enter A Todo">
+      <q-card-title class="upper-round-edge bg-secondary">
+        <q-input v-model="todoValue" @keyup.enter="mutate()" float-label="Enter A Todo..." >
           <q-btn round color="dark" icon="add" @click="mutate()">
-            <q-tooltip >Add To-Do</q-tooltip>
-          </q-btn>
+          <q-tooltip >Add To-Do</q-tooltip>
+        </q-btn>
         </q-input>
       </q-card-title>
     </template>
@@ -34,6 +34,7 @@ export default {
     return {
       todoValue: '',
       createTodoQuery,
+      // addIcon: [{}]
     };
   },
   methods: {
@@ -87,3 +88,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.upper-round-edge {
+  border-radius: 15px 15px 0px 0px;
+}
+</style>

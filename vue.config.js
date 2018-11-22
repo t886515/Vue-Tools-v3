@@ -1,8 +1,14 @@
 module.exports = {
-  lintOnSave: true,
+  lintOnSave: false,
   pluginOptions: {
     quasar: {
       theme: 'mat',
+    },
+  },
+  devServer: {
+    overlay: {
+      warnings: true,
+      errors: true,
     },
   },
 };
