@@ -1,10 +1,10 @@
 <template>
   <q-page>
     <!-- maybe u should do your own parallax -->
-    <!--
-      <q-parallax src="/img/background_attempt1.jpg" :height="800">
+
+      <q-parallax src="/img/background_attempt1.jpg" :height="screenHeight">
       <img slot="media" src="../../assets/background_attempt1.jpg"/>
-    -->
+
     <transition
       appear
       :enter-active-class="enterClass"
@@ -34,7 +34,7 @@
         </div>
       </div>
     </transition>
-    <!-- </q-parallax> -->
+    </q-parallax>
 
     <About id="about" />
     <Experiences id="experiences"/>
@@ -79,6 +79,10 @@ export default {
     leaveClass() {
       return `animated ${this.leave}`;
     },
+    screenHeight() {
+      // eslint-disable-next-line
+      return screen.height;
+    },
   },
 };
 </script>
@@ -89,31 +93,33 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('../../assets/background_attempt1.jpg') no-repeat;
-  background-size: cover;
+  /* background: url('../../assets/background_attempt1.jpg') no-repeat;
+  background-size: cover; */
 }
 /* we can figure out style later */
 .home-title__name {
   /* line-height: 1; */
-  color: white;
+  color: beige;
   text-align: center;
 
   font-weight: 500;
-  /* padding: 10px; */
   font-size: 90px;
+  text-shadow: none;
 }
 
 .home-title__titles {
   text-align: center;
   font-size: 30px;
   color: gray;
+   text-shadow: none;
 }
 
 .home-icons__navlink {
   text-decoration: none;
-  color: white;
+  color: beige;
   width: 80%;
   font-size: 40px;
   font-family: 'Montserrat', sans-serif;
+  text-shadow: none;
 }
 </style>

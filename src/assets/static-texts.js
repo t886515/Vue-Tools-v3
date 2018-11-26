@@ -1,11 +1,14 @@
 module.exports = {
-  about: [
-    "I ♡ coding. It's amazing that we have the ability to key in letters to bring an idea into an living app in the digital world!",
-    "I'm passionate about exploring new tools, designing solutions to find the most efficient algorithms for better application performances, and delivering tech products that meet day-to-day needs.",
-    `I’m experienced in building web applications with Javascript.
-Have worked with vanilla JS with HTML/CSS, jQuery, Vue.js, React.js and AngularJS... a lot of great stuff.
-And not only front-end, I love working with backend with Node.js and Springboot Java app as well!`,
-  ],
+  about: {
+    title: 'I ♡ coding.',
+    paragraphs: [
+      "It's amazing that we have the ability to key in letters to bring an idea into an living app in the digital world!",
+      "I'm passionate about exploring new tools, designing solutions to find the most efficient algorithms for better application performances, and delivering tech products that meet day-to-day needs.",
+      `I’m experienced in building web applications with Javascript.
+  Have worked with vanilla JS with HTML/CSS, jQuery, Vue.js, React.js and AngularJS... a lot of great stuff.
+  And not only front-end, I love working with backend with Node.js and Springboot Java app as well!`,
+    ],
+  },
   resume: {
     technicalSkills: {
       strong: [],

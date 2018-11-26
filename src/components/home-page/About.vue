@@ -16,8 +16,10 @@
       <q-card class="col-lg-4 col-md-6 col-sm-12 bg-dark q-ma-md about__description">
         <q-item>
           <q-item-tile color="grey-1">
-            <span v-for="(sentence, index) in staticData.about" :key="index" class="nunito about__description-text">
-              {{staticData.about[index]}}
+            <span class="dancing-script text-primary about__description-title">{{staticData.about.title}}</span>
+            <br>
+            <span v-for="(sentence, index) in staticData.about.paragraphs" :key="index" class="nunito about__description-text">
+              {{sentence}}
               <br>
             </span>
           </q-item-tile>
@@ -57,6 +59,12 @@ export default {
 
 .about__description {
   min-height: 600px;
+}
+
+.about__description-title {
+  font-size: 3em;
+  display: flex;
+  justify-content: center;
 }
 .about__description-text {
   font-size: 1.5em;
