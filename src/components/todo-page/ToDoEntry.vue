@@ -10,10 +10,15 @@
 
           <q-item-main>
             <q-item-tile color="primary">
-              {{todo.value}}
-              <!-- <q-popup-edit v-model="textHolder" title="Update calories" buttons>
-                <q-input type="number" v-model="textHolder" />
-              </q-popup-edit> -->
+              <span @click="enableTodoTitleEditMode" v-if="!isEditMode" class="text-display-mod">{{todo.value}}</span>
+
+              <q-input
+                @blur="disableTodoTitleEditMode"
+                v-if="isEditMode"
+                autofocus
+                v-model="todoTextHolder"
+              />
+
             </q-item-tile>
           </q-item-main>
         </q-item>
@@ -77,7 +82,8 @@ export default {
       displayNoteModal: false,
       notes: this.todo.notes,
       selectedTodo: false,
-      textHolder: '',
+      todoTextHolder: '',
+      isEditMode: false,
     };
   },
   props: {
@@ -96,6 +102,9 @@ export default {
     unSetSelectedTodos: {
       type: Function,
     },
+  },
+  mounted() {
+    this.todoTextHolder = this.todo.value;
   },
   methods: {
     toggleTodoMenu() {
@@ -135,6 +144,14 @@ export default {
       this.toggleTodoMenu();
       this.displayNoteModal = !this.displayNoteModal;
     },
+    enableTodoTitleEditMode() {
+      console.log('on focus?');
+      this.isEditMode = !this.isEditMode;
+    },
+    disableTodoTitleEditMode() {
+      console.log('lose focus?');
+      this.isEditMode = !this.isEditMode;
+    },
   },
   watch: {
     selectedTodo() {
@@ -144,6 +161,16 @@ export default {
     toggleOffCheckboxes() {
       this.selectedTodo = false;
     },
+    todoTextHolder() {
+      // send request to update local apollo store + send request to database.
+    },
   },
 };
 </script>
+
+<style>
+.text-display-mod {
+  overflow: hidden;
+  word-wrap: break-word;
+}
+</style>

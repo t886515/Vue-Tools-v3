@@ -1,11 +1,11 @@
 <template>
   <q-page padding>
-    This will become bio.
+    This will become resources
   </q-page>
 </template>
 
 <script>
 export default {
-  name: 'about',
+  name: 'resources',
 };
 </script>
