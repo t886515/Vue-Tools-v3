@@ -13,7 +13,38 @@
         -->
         <h1>Experiences</h1>
       </q-parallax>
-      <!-- <div>{{staticData.resume.experiences[0].title}}</div> -->
+
+    </div>
+
+    <div  class="experiences__exp-wrapper q-ma-lg">
+      <q-card @mouseover="hoverOverCard" class="q-ma-sm " v-for="exp in staticData.resume.experiences" :key="exp.company">
+
+          <q-card-media @mouseover="hoverOverCard">
+            <img src="../../assets/THD_logo.jpg">
+          <q-card-title slot="overlay">
+            {{exp.company}}
+            <span slot="subtitle">{{exp.year}}</span>
+          </q-card-title>
+          </q-card-media>
+          <q-card-main>
+            {{exp.title}}
+          </q-card-main>
+        </q-card>
+
+      <q-card @mouseover="hoverOverCard" class="q-ma-sm " v-for="pro in staticData.resume.projects" :key="pro.name">
+
+          <q-card-media @mouseover="hoverOverCard">
+            <img src="../../assets/THD_logo.jpg">
+          <q-card-title slot="overlay">
+            {{pro.name}}
+            <span slot="subtitle">{{pro['sub-title']}}</span>
+          </q-card-title>
+          </q-card-media>
+          <q-card-main>
+            {{pro.title}}
+          </q-card-main>
+        </q-card>
+
     </div>
   </q-page>
 </template>
@@ -28,13 +59,25 @@ export default {
       staticData,
     };
   },
+  methods: {
+    hoverOverCard() {
+      console.log('hovered');
+    },
+  },
 };
 </script>
 
 <style>
-.experiences {
+.experiences__exp-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
+}
+
+@media only screen and (max-width: 768px) {
+  .experiences__exp-wrapper {
+    display: inline-block;
+    padding: 10px;
+  }
 }
 </style>
