@@ -10,10 +10,16 @@
 
           <q-item-main>
             <q-item-tile color="primary">
-              <span @click="enableTodoTitleEditMode" v-if="!isEditMode" class="text-display-mod">{{todo.value}}</span>
+              <span
+                @click="toggleTodoTitleEditMode"
+                v-if="!isEditMode"
+                class="text-display-mod"
+              >
+              {{todo.value}}
+              </span>
 
               <q-input
-                @blur="disableTodoTitleEditMode"
+                @blur="toggleTodoTitleEditMode"
                 v-if="isEditMode"
                 autofocus
                 v-model="todoTextHolder"
@@ -68,6 +74,7 @@
 <script>
 import completeTodoQuery from '@/graphql/completeTodo.gql';
 import removeTodoQuery from '@/graphql/removeTodo.gql';
+import updateTodoQuery from '@/graphql/updateTodo.gql';
 import getTodosQuery from '@/graphql/getTodos.gql';
 import NotesModal from './NotesModal.vue';
 
@@ -140,16 +147,28 @@ export default {
         },
       });
     },
+    updateTodoValue() {
+      const { id } = this.todo;
+      const input = {
+        value: this.todoTextHolder,
+        lastUpdateDate: new Date(),
+      };
+      this.$apollo.mutate({
+        mutation: updateTodoQuery,
+        variables: { id, input },
+        // in order for this to work, needs to create a getTodo.gql for retrieving only 1 todo with id
+        update: (store) => {
+          const getTodoData = store.readQuery({ query: getTodosQuery });
+          getTodoData.Todos = 'x';
+        },
+      });
+    },
     toggleNoteModal() {
       this.toggleTodoMenu();
       this.displayNoteModal = !this.displayNoteModal;
     },
-    enableTodoTitleEditMode() {
+    toggleTodoTitleEditMode() {
       console.log('on focus?');
-      this.isEditMode = !this.isEditMode;
-    },
-    disableTodoTitleEditMode() {
-      console.log('lose focus?');
       this.isEditMode = !this.isEditMode;
     },
   },

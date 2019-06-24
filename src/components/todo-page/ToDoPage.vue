@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-center">
-    <q-card class="col-8 q-ma-lg round-edge" color="primary">
+  <div class="row justify-center">
+    <q-card class="col-lg-8 q-ma-lg round-edge" color="primary">
 
       <CreateTodoForm/>
 
@@ -177,9 +177,7 @@ export default {
         let indexInFinalArray;
         if (hashDatePosition.includes(formattedCreateDate)) {
           indexInFinalArray = hashDatePosition.indexOf(formattedCreateDate);
-          sortIntoObjectsByDate[indexInFinalArray] &&
-            sortIntoObjectsByDate[indexInFinalArray].todos &&
-            sortIntoObjectsByDate[indexInFinalArray].todos.push(todo);
+          sortIntoObjectsByDate[indexInFinalArray].todos.push(todo);
         } else {
           hashDatePosition.push(formattedCreateDate);
           indexInFinalArray = hashDatePosition.length - 1;
@@ -189,8 +187,8 @@ export default {
           };
         }
       });
-      console.log(sortIntoObjectsByDate);
-      return sortIntoObjectsByDate;
+      // console.log(sortIntoObjectsByDate);
+      return sortIntoObjectsByDate.reverse();
 
       // const sortedTodosObject = this.Todos.reduce((acc, todo) => {
       //   const { createDate } = todo;

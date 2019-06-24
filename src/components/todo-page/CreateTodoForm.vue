@@ -12,11 +12,10 @@
       </q-modal>
 
       <q-card-title class="upper-round-edge bg-secondary">
-        <q-input v-model="todoValue" @keyup.enter="mutate()" float-label="Enter A Todo..." >
-          <q-btn round color="dark" icon="add" @click="mutate()">
+        <q-input v-model="todoValue" @keyup.enter="mutate()" float-label="Enter A Todo..." />
+        <q-btn slot="right" round color="dark" icon="add" @click="mutate()">
           <q-tooltip >Add To-Do</q-tooltip>
         </q-btn>
-        </q-input>
       </q-card-title>
     </template>
   </ApolloMutation>
